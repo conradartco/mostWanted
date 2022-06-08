@@ -240,8 +240,11 @@ function searchByGender(people) {
             return true;
         }
     });
-    alert(`We have found multiple database entries for ${genderSelect}.\nPlease enter more details to your search criteria.`);
-    let getMoreDetails = searchByTraits(foundGenderGrp);
-    return getMoreDetails;
+    if (foundGenderGrp.length > (1)) {
+        alert(`We have found multiple database entries for ${genderSelect}.\nPlease enter more details to your search criteria.`);
+        let getMoreDetails = searchByTraits(foundGenderGrp);
+        return getMoreDetails
+    }
+    return foundGenderGrp;
 }
 // End of searchByGender()
