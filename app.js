@@ -105,7 +105,8 @@ function mainMenu(person, people) {
             break;
         default:
             // Prompt user again. Another instance of recursion
-            return mainMenu(person, people);
+            mainMenu(person, people);
+            break;
     }
 }
 // End of mainMenu()
@@ -262,31 +263,50 @@ function searchByTrait(people) {
     // Routes our application based on the user's input
     switch (displayTraitPrompt) {
         case "id":
-            let foundId = searchById(people);
+            let foundId = searchByUserInput(people);
             return foundId;
         case "gender":
-            let foundGender = searchByGender(people);
+            let foundGender = searchByUserInput(people);
             return foundGender;
-        case "date of birth":
-            let foundDob = searchByDob(people);
+        case "dob":
+            let foundDob = searchByUserInput(people);
             return foundDob;
         case "height":
-            let foundHeight = searchByHeight(people);
+            let foundHeight = searchByUserInput(people);
             return foundHeight;
         case "weight":
-            let foundWeight = searchByWeight(people);
+            let foundWeight = searchByUserInput(people);
             return foundWeight;
-        case "eye color":
-            let foundEyeColor = searchByEyeColor(people);
+        case "eyeColor":
+            let foundEyeColor = searchByUserInput(people);
             return foundEyeColor;
         case "occupation":
-            let foundOccupation = searchByOccupation(people);
+            let foundOccupation = searchByUserInput(people);
             return foundOccupation;
         default:
             // Prompt user again. Another instance of recursion
-            return searchByTrait(people);
+            searchByTrait(people);
+            break;
     }
 }
+/**
+ * // This function is used to determine a trait of our Most Wanted
+ * @param {Array} people        Passes in array dataset of people objects 
+ * @returns {String}            Returns the now defined user requested trait
+ */
+function searchByUserInput(people) {
+    let userInputProp = prompt("Please enter the trait you would like to search by:\nid\nfirstName\nlastName\ngender\ndob\nheight\nweight\neyeColor\noccupation\n");
+    let userInputVal = prompt("Please enter the value you'd like to search for.")
+    let results = people.filter(
+        function (person){
+            if (person[userInputProp] === userInputVal || +userInputVal === person[userInputProp]){
+                return true;
+            }
+        }
+    );
+    return results;
+}
+// End of searchByUserInput()
 
 function searchById(people) {
     let idSelect = promptFor("What is the person's ID number?", chars);
