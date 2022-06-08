@@ -215,6 +215,9 @@ function searchByTraits(people) {
         case "date of birth":
             let foundDob = searchByDob(people);
             return foundDob;
+        case "height":
+            let foundHeight = searchByHeight(people);
+            return foundHeight;
     }
     // let heightSelect = promptFor("What is their height?");
     // let weightSelect = promptFor("What is their weight?");
@@ -260,3 +263,20 @@ function searchByDob(people) {
     return foundPerson;
 }
 // End of searchByDob()
+
+function searchByHeight(people) {
+    let heightSelect = promptFor("What is the person's height?", chars);
+    var heightToInt = parseInt(heightSelect)
+    let foundHeightGrp = people.filter(function (person) {
+        if (person.height === heightToInt) {
+            return true;
+        }
+    });
+    if (foundHeightGrp.length > (1)) {
+        alert(`We have found multiple database entries for ${heightToInt}.\nPlease enter more details to your search criteria.`);
+        let getMoreDetails = searchByTraits(foundHeightGrp);
+        return getMoreDetails
+    }
+    return foundHeightGrp;
+}
+// End of searchByGender()
