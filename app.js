@@ -209,6 +209,9 @@ function searchByTraits(people) {
         case "id":
             let foundId = searchById(people);
             return foundId;
+        case "gender":
+            let foundGender = searchByGender(people);
+            return foundGender;
     }
     // let genderSelect = promptFor("What is their gender?");
     // let dobSelect = promptFor("What is their date of birth?");
@@ -229,3 +232,16 @@ function searchById(people) {
     return foundPerson;
 }
 // End of searchById()
+
+function searchByGender(people) {
+    let genderSelect = promptFor("What is the person's gender?", chars);
+    let foundGenderGrp = people.filter(function (person) {
+        if (person.gender === genderSelect) {
+            return true;
+        }
+    });
+    alert(`We have found multiple database entries for ${genderSelect}.\nPlease enter more details to your search criteria.`);
+    let getMoreDetails = searchByTraits(foundGenderGrp);
+    return getMoreDetails;
+}
+// End of searchByGender()
