@@ -196,13 +196,29 @@ function chars(input) {
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
 
-function findPersonFamily(object, people) {
+function findPersonFamily(person, people) {
+    let identifiedPerson = person;
+    let personParents = people.filter(function (person) {
+        if (identifiedPerson.parents === people.id) {
+            return true;
+        }
+    });
+    let personSpouse = people.filter(function (person) {
+        if (identifiedPerson.currentSpouse === people.id) {
+            return true;
+        }
+    });
+    let personInfo = `First Name: ${person.firstName}\n`;
+    personInfo += `Last Name: ${person.lastName}\n`;
+    personInfo += `Spouse: ${personSpouse.id}\n`;
+    personInfo += `Parents: ${personParents.firstName}`;
     
+    return(personInfo);
 }
 
 function searchByTraits(people) {
     let displayTraitPrompt = prompt(
-        `You have selected the Search-By-Trait option\nEnter your search criteria based on the following options:\nID\nGender\nDate of Birth\nHeight\nWeight\nEye color\nOccupation\n`
+        `You have selected the Search-By-Trait Menu\nEnter your search criteria based on the following options:\nID\nGender\nDate of Birth\nHeight\nWeight\nEye color\nOccupation\n`
     ).toLowerCase();
     // Routes our application based on the user's input
     switch (displayTraitPrompt) {
