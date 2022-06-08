@@ -88,6 +88,10 @@ function mainMenu(person, people) {
         case "quit":
             // Stop application execution
             return;
+        case "test":
+            // Test functions here
+            console.log("This is a test")
+            break;
         default:
             // Prompt user again. Another instance of recursion
             return mainMenu(person, people);
@@ -140,8 +144,15 @@ function displayPeople(people) {
 function displayPerson(person) {
     let personInfo = `First Name: ${person.firstName}\n`;
     personInfo += `Last Name: ${person.lastName}\n`;
+    personInfo += `ID: ${person.id}\n`;
+    personInfo += `Gender: ${person.gender}\n`;
+    personInfo += `Date of Birth: ${person.dob}\n`;
+    personInfo += `Height: ${person.height}\n`;
+    personInfo += `Weight: ${person.weight}\n`;
+    personInfo += `Eye Color: ${person.eyeColor}\n`;
+    personInfo += `Occupation: ${person.occupation}\n`;
     //! TODO #1a: finish getting the rest of the information to display //////////////////////////////////////////
-    alert(personInfo);
+    return(personInfo);
 }
 // End of displayPerson()
 
@@ -184,3 +195,16 @@ function chars(input) {
 
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
+
+function findPersonFamily(object, people) {
+    
+}
+
+function searchByTraits(people) {
+    let genderSelect = promptFor("What is their gender?");
+    let dobSelect = promptFor("What is their date of birth?");
+    let heightSelect = promptFor("What is their height?");
+    let weightSelect = promptFor("What is their weight?");
+    let eyeColorSelect = promptFor("What is their eye color?");
+    let occupationSelect = promptFor("What is their occupation?")
+}
