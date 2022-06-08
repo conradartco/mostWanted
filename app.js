@@ -218,9 +218,10 @@ function searchByTraits(people) {
         case "height":
             let foundHeight = searchByHeight(people);
             return foundHeight;
+        case "weight":
+            let foundWeight = searchByWeight(people);
+            return foundWeight;
     }
-    // let heightSelect = promptFor("What is their height?");
-    // let weightSelect = promptFor("What is their weight?");
     // let eyeColorSelect = promptFor("What is their eye color?");
     // let occupationSelect = promptFor("What is their occupation?");
 }
@@ -279,4 +280,21 @@ function searchByHeight(people) {
     }
     return foundHeightGrp;
 }
-// End of searchByGender()
+// End of searchByHeight()
+
+function searchByWeight(people) {
+    let weightSelect = promptFor("What is the person's weight?", chars);
+    var weightToInt = parseInt(weightSelect)
+    let foundWeightGrp = people.filter(function (person) {
+        if (person.weight === weightToInt) {
+            return true;
+        }
+    });
+    if (foundWeightGrp.length > (1)) {
+        alert(`We have found multiple database entries for ${weightToInt}.\nPlease enter more details to your search criteria.`);
+        let getMoreDetails = searchByTraits(foundWeightGrp);
+        return getMoreDetails
+    }
+    return foundWeightGrp;
+}
+// End of searchByWeight()
