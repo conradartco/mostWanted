@@ -221,6 +221,9 @@ function searchByTraits(people) {
         case "weight":
             let foundWeight = searchByWeight(people);
             return foundWeight;
+        case "eye color":
+            let foundEyeColor = searchByEyeColor(people);
+            return foundEyeColor;
     }
     // let eyeColorSelect = promptFor("What is their eye color?");
     // let occupationSelect = promptFor("What is their occupation?");
@@ -246,7 +249,7 @@ function searchByGender(people) {
         }
     });
     if (foundGenderGrp.length > (1)) {
-        alert(`We have found multiple database entries for ${genderSelect}.\nPlease enter more details to your search criteria.`);
+        alert(`We have found multiple database entries for ${genderSelect}s.\nPlease enter more details to your search criteria.`);
         let getMoreDetails = searchByTraits(foundGenderGrp);
         return getMoreDetails
     }
@@ -274,7 +277,7 @@ function searchByHeight(people) {
         }
     });
     if (foundHeightGrp.length > (1)) {
-        alert(`We have found multiple database entries for ${heightToInt}.\nPlease enter more details to your search criteria.`);
+        alert(`We have found multiple database entries for heights of ${heightToInt}.\nPlease enter more details to your search criteria.`);
         let getMoreDetails = searchByTraits(foundHeightGrp);
         return getMoreDetails
     }
@@ -291,10 +294,26 @@ function searchByWeight(people) {
         }
     });
     if (foundWeightGrp.length > (1)) {
-        alert(`We have found multiple database entries for ${weightToInt}.\nPlease enter more details to your search criteria.`);
+        alert(`We have found multiple database entries for weights of ${weightToInt}.\nPlease enter more details to your search criteria.`);
         let getMoreDetails = searchByTraits(foundWeightGrp);
         return getMoreDetails
     }
     return foundWeightGrp;
 }
 // End of searchByWeight()
+
+function searchByEyeColor(people) {
+    let eyeColorSelect = promptFor("What is the person's eye color?", chars);
+    let foundEyeColorGrp = people.filter(function (person) {
+        if (person.eyeColor === eyeColorSelect) {
+            return true;
+        }
+    });
+    if (foundEyeColorGrp.length > (1)) {
+        alert(`We have found multiple database entries for people with ${eyeColorSelect} eyes.\nPlease enter more details to your search criteria.`);
+        let getMoreDetails = searchByTraits(foundEyeColorGrp);
+        return getMoreDetails
+    }
+    return foundEyeColorGrp;
+}
+// End of searchByEyeColor()
