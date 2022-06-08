@@ -31,7 +31,18 @@ function app(people) {
         case "no":
             //! TODO #4: Declare a searchByTraits (multiple traits) function //////////////////////////////////////////
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
-            searchResults = searchByTraits(people);
+            let searchTraits = promptFor("Would you like to search using a singular trait or multiple traits?\nPlease enter: single or multiple\n", chars).toLowerCase();
+            switch (searchTraits) {
+                case "single":
+                   searchResults = searchByTrait(people);
+                   break;
+                case "multiple":
+                    searchResults = searchByTraits(people);
+                    break;
+                default:
+                    app(people);
+                    break;
+            }
             break;
         default:
             // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
@@ -196,29 +207,57 @@ function chars(input) {
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
 
+/**
+ * 
+ * @param {Object} person       The selected person that we'll be finding the family of
+ * @param {Array} people        The complete dataset (array of person objects)
+ * @returns {String}            A string listing off the selected persons' family members
+ */
 function findPersonFamily(person, people) {
     let identifiedPerson = person;
-    let personParents = people.filter(function (person) {
-        if (identifiedPerson.parents === people.id) {
-            return true;
-        }
-    });
+    let personSpouse = getPersonSpouse(identifiedPerson, people);
+    // let personParents = getPersonParents(identifiedPerson, people);
+
+    let personInfo = `First Name: ${identifiedPerson.firstName}\n`;
+    personInfo += `Last Name: ${identifiedPerson.lastName}\n`;
+    personInfo += `Spouse: ${personSpouse[0].firstName}\n`;
+    // personInfo += `Parents: ${personParents[0].firstName}\n`;
+
+    return personInfo;
+}
+
+function getPersonSpouse(person, people) {
+    let identifiedPerson = person;
     let personSpouse = people.filter(function (person) {
-        if (identifiedPerson.currentSpouse === people.id) {
+        if (identifiedPerson.currentSpouse === person.id) {
             return true;
         }
     });
-    let personInfo = `First Name: ${person.firstName}\n`;
-    personInfo += `Last Name: ${person.lastName}\n`;
-    personInfo += `Spouse: ${personSpouse.id}\n`;
-    personInfo += `Parents: ${personParents.firstName}`;
-    
-    return(personInfo);
+    let identifiedSpouse = personSpouse;
+    return identifiedSpouse;
+}
+
+function getPersonParents(person, people) {
+    let identifiedPerson = person;
+    let personParents = people.filter(function (person) {
+        if (identifiedPerson.parents === person.id) {
+            return true;
+        }
+    });
+    return personParents;
 }
 
 function searchByTraits(people) {
-    let displayTraitPrompt = prompt(
-        `You have selected the Search-By-Trait Menu\nEnter your search criteria based on the following options:\nID\nGender\nDate of Birth\nHeight\nWeight\nEye color\nOccupation\n`
+    let userTraitsQuery = promptFor(`You have selected the Search-By-Traits Menu\nEnter your search criteria in the following format:\nDataset: value\nDataset options are as follows:\nID\nGender\nDate of Birth\nHeight\nWeight\nEye Color\nOccupation\n`, chars)
+    let multiTraitSearch = people.every(userTraitsQuery => {
+        return people.includes(userTraitsQuery);
+    })
+    return multiTraitSearch;
+}
+
+function searchByTrait(people) {
+    let displayTraitPrompt = promptFor(
+        `You have selected the Search-By-Trait Menu\nEnter your search criteria based on the following options:\nID\nGender\nDate of Birth\nHeight\nWeight\nEye color\nOccupation\n`, chars
     ).toLowerCase();
     // Routes our application based on the user's input
     switch (displayTraitPrompt) {
@@ -245,7 +284,7 @@ function searchByTraits(people) {
             return foundOccupation;
         default:
             // Prompt user again. Another instance of recursion
-            return searchByTraits(people);
+            return searchByTrait(people);
     }
 }
 
