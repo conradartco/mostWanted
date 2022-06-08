@@ -201,10 +201,31 @@ function findPersonFamily(object, people) {
 }
 
 function searchByTraits(people) {
-    let genderSelect = promptFor("What is their gender?");
-    let dobSelect = promptFor("What is their date of birth?");
-    let heightSelect = promptFor("What is their height?");
-    let weightSelect = promptFor("What is their weight?");
-    let eyeColorSelect = promptFor("What is their eye color?");
-    let occupationSelect = promptFor("What is their occupation?")
+    let displayTraitPrompt = prompt(
+        `You have selected the Search-By-Trait option\nEnter your search criteria based on the following options:\nID\nGender\nDate of Birth\nHeight\nWeight\nEye color\nOccupation\n`
+    ).toLowerCase();
+    // Routes our application based on the user's input
+    switch (displayTraitPrompt) {
+        case "id":
+            let foundId = searchById(people);
+            return foundId;
+    }
+    // let genderSelect = promptFor("What is their gender?");
+    // let dobSelect = promptFor("What is their date of birth?");
+    // let heightSelect = promptFor("What is their height?");
+    // let weightSelect = promptFor("What is their weight?");
+    // let eyeColorSelect = promptFor("What is their eye color?");
+    // let occupationSelect = promptFor("What is their occupation?");
 }
+
+function searchById(people) {
+    let idSelect = promptFor("What is the person's ID number?", chars);
+    var idToInt = parseInt(idSelect)
+    let foundPerson = people.filter(function (person) {
+        if (person.id === idToInt) {
+            return true;
+        }
+    });
+    return foundPerson;
+}
+// End of searchById()
