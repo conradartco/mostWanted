@@ -212,9 +212,10 @@ function searchByTraits(people) {
         case "gender":
             let foundGender = searchByGender(people);
             return foundGender;
+        case "date of birth":
+            let foundDob = searchByDob(people);
+            return foundDob;
     }
-    // let genderSelect = promptFor("What is their gender?");
-    // let dobSelect = promptFor("What is their date of birth?");
     // let heightSelect = promptFor("What is their height?");
     // let weightSelect = promptFor("What is their weight?");
     // let eyeColorSelect = promptFor("What is their eye color?");
@@ -248,3 +249,14 @@ function searchByGender(people) {
     return foundGenderGrp;
 }
 // End of searchByGender()
+
+function searchByDob(people) {
+    let dobSelect = promptFor("What is the person's date of birth?\nPlease use standard format of: MM/DD/YYYY", chars);
+    let foundPerson = people.filter(function (person) {
+        if (person.dob === dobSelect) {
+            return true;
+        }
+    });
+    return foundPerson;
+}
+// End of searchByDob()
