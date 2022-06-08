@@ -224,9 +224,13 @@ function searchByTraits(people) {
         case "eye color":
             let foundEyeColor = searchByEyeColor(people);
             return foundEyeColor;
+        case "occupation":
+            let foundOccupation = searchByOccupation(people);
+            return foundOccupation;
+        default:
+            // Prompt user again. Another instance of recursion
+            return searchByTraits(people);
     }
-    // let eyeColorSelect = promptFor("What is their eye color?");
-    // let occupationSelect = promptFor("What is their occupation?");
 }
 
 function searchById(people) {
@@ -317,3 +321,19 @@ function searchByEyeColor(people) {
     return foundEyeColorGrp;
 }
 // End of searchByEyeColor()
+
+function searchByOccupation(people) {
+    let occupationSelect = promptFor("What is the person's occupation?", chars);
+    let foundOccupationGrp = people.filter(function (person) {
+        if (person.occupation === occupationSelect) {
+            return true;
+        }
+    });
+    if (foundOccupationGrp.length > (1)) {
+        alert(`We have found multiple database entries for occupations of "${occupationSelect}".\nPlease enter more details to your search criteria.`);
+        let getMoreDetails = searchByTraits(foundOccupationGrp);
+        return getMoreDetails
+    }
+    return foundOccupationGrp;
+}
+// End of searchByOccupation()
