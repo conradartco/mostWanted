@@ -37,7 +37,7 @@ function app(people) {
                    searchResults = searchByTrait(people);
                    break;
                 case "multiple":
-                    searchResults = searchByTraits(people);
+                    searchResults = searchByTraitMulti(people);
                     break;
                 default:
                     app(people);
@@ -154,16 +154,13 @@ function displayPeople(people) {
  * @param {Object} person       A singular object.
  */
 function displayPerson(person) {
-    let personInfo = `First Name: ${person.firstName}\n`;
-    personInfo += `Last Name: ${person.lastName}\n`;
-    personInfo += `ID: ${person.id}\n`;
-    personInfo += `Gender: ${person.gender}\n`;
-    personInfo += `Date of Birth: ${person.dob}\n`;
-    personInfo += `Height: ${person.height}\n`;
-    personInfo += `Weight: ${person.weight}\n`;
-    personInfo += `Eye Color: ${person.eyeColor}\n`;
-    personInfo += `Occupation: ${person.occupation}\n`;
-    //! TODO #1a: finish getting the rest of the information to display //////////////////////////////////////////
+    let personInfo = "";
+    for (let property in person) {
+        if(property === "parents" || property === "currentSpouse") {
+            continue;
+        }
+        personInfo += `${property}: ${person[property]}\n`;
+    }
     return(personInfo);
 }
 // End of displayPerson()
@@ -248,12 +245,22 @@ function getPersonParents(person, people) {
     return personParents;
 }
 
-function searchByTraits(people) {
-    let userTraitsQuery = promptFor(`You have selected the Search-By-Traits Menu\nEnter your search criteria in the following format:\nDataset: value\nDataset options are as follows:\nID\nGender\nDate of Birth\nHeight\nWeight\nEye Color\nOccupation\n`, chars)
-    let multiTraitSearch = people.every(userTraitsQuery => {
-        return people.includes(userTraitsQuery);
-    })
-    return multiTraitSearch;
+function searchByTraitMulti(people) {
+    let result = searchByMultiInput(people);
+    return result;
+}
+
+function searchByMultiInput(people) {
+    let userMultiTraitStr = prompt("Please enter the traits you would like to search for, separating each value with a comma:\nExample: gender, occupation, id\nid\nfirstName\nlastName\ngender\ndob\nheight\nweight\neyeColor\noccupation\n");
+    let userMultiTraitArray = userMultiTraitStr.split([":",","]);
+    let results = people.filter(() => {
+            for (let i = 0; i < userMultiTraitArray.length; i++) {
+                if (userMultiTraitArray[i] === userMultiTraitArray[i + 1] || +userMultiTraitArray[i + 1] === userMultiTraitArray[i]) {
+                return true;
+                }
+            }
+        })
+    return results;
 }
 
 /**
