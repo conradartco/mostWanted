@@ -101,7 +101,7 @@ function mainMenu(person, people) {
             return;
         case "test":
             // Test functions here
-            console.log("This is a test")
+            findPersonSiblings(person[0], people);
             break;
         default:
             // Prompt user again. Another instance of recursion
@@ -205,62 +205,72 @@ function chars(input) {
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
 
-/**
- * 
- * @param {Object} person       The selected person that we'll be finding the family of
- * @param {Array} people        The complete dataset (array of person objects)
- * @returns {String}            A string listing off the selected persons' family members
- */
 function findPersonFamily(person, people) {
-    let identifiedPerson = person;
-    let personSpouse = getPersonSpouse(identifiedPerson, people);
-    // let personParents = getPersonParents(identifiedPerson, people);
-
-    let personInfo = `First Name: ${identifiedPerson.firstName}\n`;
-    personInfo += `Last Name: ${identifiedPerson.lastName}\n`;
-    personInfo += `Spouse: ${personSpouse[0].firstName}\n`;
-    // personInfo += `Parents: ${personParents[0].firstName}\n`;
-
-    return personInfo;
+    let personSelect = person;
+    let personSpouse = findPersonSpouse(personSelect, people);
+    let personSiblings = findPersonSiblings(personSelect, people);
+    let personParents = findPersonParents(personSelect, people);
+    let familyArray = concatFamilyTies(personSpouse, personParents, personSiblings);
+    let personFamilyDetails = mapFamily(familyArray);
+    return personFamilyDetails;
 }
 
-function getPersonSpouse(person, people) {
-    let identifiedPerson = person;
-    let personSpouse = people.filter(function (person) {
-        if (identifiedPerson.currentSpouse === person.id) {
-            return true;
-        }
-    });
-    let identifiedSpouse = personSpouse;
-    return identifiedSpouse;
+function concatFamilyTies(spouse, parents, siblings) {
+    let spouseFamilyArray = spouse.concat(parents, siblings);
+    return spouseFamilyArray;
 }
 
-function getPersonParents(person, people) {
-    let identifiedPerson = person;
-    let personParents = people.filter(function (person) {
-        if (identifiedPerson.parents === person.id) {
-            return true;
-        }
-    });
-    return personParents;
-}
-
-function searchByTraitMulti(people) {
-    let result = searchByMultiInput(people);
+function mapFamily(people) {
+    let result = people.map(function (person) {
+        return `${person.firstName} ${person.lastName}`;
+    })
+    .join("\n")
     return result;
 }
 
-function searchByMultiInput(people) {
-    let userMultiTraitStr = prompt("Please enter the traits you would like to search for, separating each value with a comma:\nExample: gender, occupation, id\nid\nfirstName\nlastName\ngender\ndob\nheight\nweight\neyeColor\noccupation\n");
-    let userMultiTraitArray = userMultiTraitStr.split([":",","]);
-    let results = people.filter(() => {
-            for (let i = 0; i < userMultiTraitArray.length; i++) {
-                if (userMultiTraitArray[i] === userMultiTraitArray[i + 1] || +userMultiTraitArray[i + 1] === userMultiTraitArray[i]) {
-                return true;
-                }
+/**
+ * This function finds the identified person's spouse, and returns their information
+ * @param {Array} person 
+ * @param {Array} people 
+ * @returns {Array}
+ */
+function findPersonSpouse(person, people) {
+    let personSelect = person;
+    let personSpouse = people.filter(function(person){
+        if (personSelect.currentSpouse === person.id) {
+            return true;
+        }
+    })
+    return personSpouse;
+}
+// End of findPersonSpouse()
+
+function findPersonSiblings(person, people) {
+    let personSelect = person;
+    let personSiblings = people.filter(function(person){
+        if(personSelect.parents === person.parents && personSelect != person) {
+        return true;
+        }
+    })
+    return personSiblings;
+}
+
+/**
+ * This function finds the identified person's parents, and returns their information
+ * @param {Array} person 
+ * @param {Array} people 
+ * @returns {Array}
+ */
+function findPersonParents(person, people) {
+    let personParentArray = person.parents;
+    let identifiedParents = people.filter(function(person){
+        for(let i = 0; i < personParentArray.length; i++){
+            if (personParentArray[i] === person.id){
+                    return true;
             }
-        })
-    return results;
+        }
+    })
+    return identifiedParents;
 }
 
 /**
