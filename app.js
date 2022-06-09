@@ -256,49 +256,29 @@ function searchByTraits(people) {
     return multiTraitSearch;
 }
 
-function searchByTrait(people) {
-    let displayTraitPrompt = promptFor(
-        `You have selected the Search-By-Trait Menu\nEnter your search criteria based on the following options:\nID\nGender\nDate of Birth\nHeight\nWeight\nEye color\nOccupation\n`, chars
-    ).toLowerCase();
-    // Routes our application based on the user's input
-    switch (displayTraitPrompt) {
-        case "id":
-            let foundId = searchByUserInput(people);
-            return foundId;
-        case "gender":
-            let foundGender = searchByUserInput(people);
-            return foundGender;
-        case "dob":
-            let foundDob = searchByUserInput(people);
-            return foundDob;
-        case "height":
-            let foundHeight = searchByUserInput(people);
-            return foundHeight;
-        case "weight":
-            let foundWeight = searchByUserInput(people);
-            return foundWeight;
-        case "eyeColor":
-            let foundEyeColor = searchByUserInput(people);
-            return foundEyeColor;
-        case "occupation":
-            let foundOccupation = searchByUserInput(people);
-            return foundOccupation;
-        default:
-            // Prompt user again. Another instance of recursion
-            searchByTrait(people);
-            break;
-    }
-}
 /**
- * // This function is used to determine a trait of our Most Wanted
- * @param {Array} people        Passes in array dataset of people objects 
- * @returns {String}            Returns the now defined user requested trait
+ * This function is used to determine who our Most Wanted person is, defined by its traits
+ * @param {Array} people        Passes in array of people objects 
+ * @returns {Array}             Returns filtered object response
+ */
+function searchByTrait(people) {
+    let result = searchByUserInput(people);
+    while (result.length > (1)) {
+        result = searchByUserInput(result);
+    }
+    return result;
+}
+// End of searchByTrait()
+
+/**
+ * // This function is used to determine a trait of objects within our dataset, by user defined input
+ * @param {Array} people        Passes in array of people objects 
+ * @returns {Array}             Returns the array of objects containing the user defined trait
  */
 function searchByUserInput(people) {
     let userInputProp = prompt("Please enter the trait you would like to search by:\nid\nfirstName\nlastName\ngender\ndob\nheight\nweight\neyeColor\noccupation\n");
     let userInputVal = prompt("Please enter the value you'd like to search for.")
-    let results = people.filter(
-        function (person){
+    let results = people.filter(function (person){
             if (person[userInputProp] === userInputVal || +userInputVal === person[userInputProp]){
                 return true;
             }
@@ -307,108 +287,3 @@ function searchByUserInput(people) {
     return results;
 }
 // End of searchByUserInput()
-
-function searchById(people) {
-    let idSelect = promptFor("What is the person's ID number?", chars);
-    var idToInt = parseInt(idSelect)
-    let foundPerson = people.filter(function (person) {
-        if (person.id === idToInt) {
-            return true;
-        }
-    });
-    return foundPerson;
-}
-// End of searchById()
-
-function searchByGender(people) {
-    let genderSelect = promptFor("What is the person's gender?", chars);
-    let foundGenderGrp = people.filter(function (person) {
-        if (person.gender === genderSelect) {
-            return true;
-        }
-    });
-    if (foundGenderGrp.length > (1)) {
-        alert(`We have found multiple database entries for ${genderSelect}s.\nPlease enter more details to your search criteria.`);
-        let getMoreDetails = searchByTraits(foundGenderGrp);
-        return getMoreDetails
-    }
-    return foundGenderGrp;
-}
-// End of searchByGender()
-
-function searchByDob(people) {
-    let dobSelect = promptFor("What is the person's date of birth?\nPlease use standard format of: MM/DD/YYYY", chars);
-    let foundPerson = people.filter(function (person) {
-        if (person.dob === dobSelect) {
-            return true;
-        }
-    });
-    return foundPerson;
-}
-// End of searchByDob()
-
-function searchByHeight(people) {
-    let heightSelect = promptFor("What is the person's height?", chars);
-    var heightToInt = parseInt(heightSelect)
-    let foundHeightGrp = people.filter(function (person) {
-        if (person.height === heightToInt) {
-            return true;
-        }
-    });
-    if (foundHeightGrp.length > (1)) {
-        alert(`We have found multiple database entries for heights of ${heightToInt}.\nPlease enter more details to your search criteria.`);
-        let getMoreDetails = searchByTraits(foundHeightGrp);
-        return getMoreDetails
-    }
-    return foundHeightGrp;
-}
-// End of searchByHeight()
-
-function searchByWeight(people) {
-    let weightSelect = promptFor("What is the person's weight?", chars);
-    var weightToInt = parseInt(weightSelect)
-    let foundWeightGrp = people.filter(function (person) {
-        if (person.weight === weightToInt) {
-            return true;
-        }
-    });
-    if (foundWeightGrp.length > (1)) {
-        alert(`We have found multiple database entries for weights of ${weightToInt}.\nPlease enter more details to your search criteria.`);
-        let getMoreDetails = searchByTraits(foundWeightGrp);
-        return getMoreDetails
-    }
-    return foundWeightGrp;
-}
-// End of searchByWeight()
-
-function searchByEyeColor(people) {
-    let eyeColorSelect = promptFor("What is the person's eye color?", chars);
-    let foundEyeColorGrp = people.filter(function (person) {
-        if (person.eyeColor === eyeColorSelect) {
-            return true;
-        }
-    });
-    if (foundEyeColorGrp.length > (1)) {
-        alert(`We have found multiple database entries for people with ${eyeColorSelect} eyes.\nPlease enter more details to your search criteria.`);
-        let getMoreDetails = searchByTraits(foundEyeColorGrp);
-        return getMoreDetails
-    }
-    return foundEyeColorGrp;
-}
-// End of searchByEyeColor()
-
-function searchByOccupation(people) {
-    let occupationSelect = promptFor("What is the person's occupation?", chars);
-    let foundOccupationGrp = people.filter(function (person) {
-        if (person.occupation === occupationSelect) {
-            return true;
-        }
-    });
-    if (foundOccupationGrp.length > (1)) {
-        alert(`We have found multiple database entries for occupations of "${occupationSelect}".\nPlease enter more details to your search criteria.`);
-        let getMoreDetails = searchByTraits(foundOccupationGrp);
-        return getMoreDetails
-    }
-    return foundOccupationGrp;
-}
-// End of searchByOccupation()
