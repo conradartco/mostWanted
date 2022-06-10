@@ -101,7 +101,7 @@ function mainMenu(person, people) {
             return;
         case "test":
             // Test functions here
-            findPersonChildren(person[0], people);
+            findChildrenRecursive(person[0], people);
             break;
         default:
             // Prompt user again. Another instance of recursion
@@ -296,16 +296,80 @@ function findPersonSiblings(person, people) {
 function findPersonChildren(person, people) {
     let personSelect = person;
     let personChildren = people.filter(function(person){
-        if(personSelect.id === person.parents[0] || personSelect.id === person.parents[1]){
+        if(personSelect.id === person.parents[0] || personSelect.id === person.parents[1] && person.parents != (0)){
             return true;
         }
     })
-    let result = personChildren.map(function(person){
-        return `Child: ${person.firstName} ${person.lastName}\n`
-    })
+    let personGrandchildren = findPersonGrandchild(personChildren, people);
+    let result = concatDescendantTies(personChildren, personGrandchildren);
     return result;
 }
 // End of findPersonChildren()
+
+/**
+ * This function calls on the already defined children of the identified subject, and finds if there are any grandchildren
+ * @param {Array} definedChildren   The identified children objects
+ * @param {Array} people            The dataset
+ * @returns {Array}                 The returned array of grandchild(ren)
+ */
+function findPersonGrandchild(definedChildren, people) {
+    let children = definedChildren;
+    let grandChild = people.filter(function(person){
+        for(let i = 0; i < children.length; i++){
+            if(person.parents[0] === children[i].id || person.parents[1] === children[i].id && person.parents != (0)){
+                return true;
+            }
+        }
+    })
+    return grandChild;
+}
+// End of findPersonGrandchild()
+
+/**
+ * This function concatenates the child and grandchild to be alerted to the user
+ * @param {Array} children          The identified child objects
+ * @param {Array} grandchildren     The identified grandchild objects
+ * @returns {Array}                 The returned array of formatted parent:child relationships
+ */
+function concatDescendantTies(children, grandchildren) {
+    let childResult = children.map(function(person){
+        return `Child: ${person.firstName} ${person.lastName}\n`
+    })
+    let grandchildResult = grandchildren.map(function(person){
+        return `Grand-Child: ${person.firstName} ${person.lastName}\n`
+    })
+    let descendantList = childResult.concat(grandchildResult);
+    return descendantList;
+}
+// End of concatDescendatTies()
+
+/**
+ * This function is intended to find any descendants using recursion
+ * NOTE * This is not currently working correctly
+ * @param {Object} person           The identified person object
+ * @param {Array} people            The dataset
+ * @param {Array} array             A default array
+ * @returns {Array}                 Returns an array with any descendants of the identified person
+ */
+function findChildrenRecursive(person, people, array = []) {
+    // Base Case (Terminating Condintion)
+    let personSelect = person;
+    // array = people;
+    let subArray = people.filter(function(person){
+        if(personSelect.id === person.parents[0] || personSelect.id === person.parents[1] && person.parents != (0)) {
+            return true;
+        }
+    })
+    if(subArray.length === 0) {
+        return subArray;
+    }
+    // Recursive Case
+    for(let i = 0; i < subArray.length; i++){
+        subArray = subArray.push(findChildrenRecursive(subArray[i], people))
+    }
+    alert(array);
+}
+// End of findChildrenRecursive()
 
 /**
  * This function finds the identified person's parents, and returns their information
