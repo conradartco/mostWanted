@@ -101,7 +101,7 @@ function mainMenu(person, people) {
             return;
         case "test":
             // Test functions here
-            findPersonSiblings(person[0], people);
+            findPersonChildren(person[0], people);
             break;
         default:
             // Prompt user again. Another instance of recursion
@@ -205,27 +205,25 @@ function chars(input) {
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
 
+function findPersonDescendants(person, people) {
+    let personSelect = person;
+    let personChildren = findPersonChildren(personSelect, people);
+    let result = personChildren.split(',')
+    return result;
+}
+
 function findPersonFamily(person, people) {
     let personSelect = person;
     let personSpouse = findPersonSpouse(personSelect, people);
     let personSiblings = findPersonSiblings(personSelect, people);
     let personParents = findPersonParents(personSelect, people);
     let familyArray = concatFamilyTies(personSpouse, personParents, personSiblings);
-    let personFamilyDetails = mapFamily(familyArray);
-    return personFamilyDetails;
+    return familyArray;
 }
 
 function concatFamilyTies(spouse, parents, siblings) {
     let spouseFamilyArray = spouse.concat(parents, siblings);
     return spouseFamilyArray;
-}
-
-function mapFamily(people) {
-    let result = people.map(function (person) {
-        return `${person.firstName} ${person.lastName}`;
-    })
-    .join("\n")
-    return result;
 }
 
 /**
@@ -241,18 +239,37 @@ function findPersonSpouse(person, people) {
             return true;
         }
     })
-    return personSpouse;
+    let result = personSpouse.map(function(person){
+        return `Spouse: ${person.firstName} ${person.lastName}\n`
+    })
+    return result;
 }
 // End of findPersonSpouse()
 
 function findPersonSiblings(person, people) {
     let personSelect = person;
     let personSiblings = people.filter(function(person){
-        if(personSelect.parents === person.parents && personSelect != person) {
-        return true;
+        if(personSelect.parents[0] === person.parents[0] && personSelect.id != person.id) {
+            return true;
         }
     })
-    return personSiblings;
+    let result = personSiblings.map(function(person){
+        return `Sibling: ${person.firstName} ${person.lastName}\n`
+    })
+    return result;
+}
+
+function findPersonChildren(person, people) {
+    let personSelect = person;
+    let personChildren = people.filter(function(person){
+        if(personSelect.id === person.parents[0] || personSelect.id === person.parents[1]){
+            return true;
+        }
+    })
+    let result = personChildren.map(function(person){
+        return `Child: ${person.firstName} ${person.lastName}\n`
+    })
+    return result;
 }
 
 /**
@@ -270,7 +287,10 @@ function findPersonParents(person, people) {
             }
         }
     })
-    return identifiedParents;
+    let result = identifiedParents.map(function(person){
+        return `Parent: ${person.firstName} ${person.lastName}\n`
+    })
+    return result;
 }
 
 /**
