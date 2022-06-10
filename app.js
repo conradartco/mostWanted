@@ -37,7 +37,7 @@ function app(people) {
                    searchResults = searchByTrait(people);
                    break;
                 case "multi":
-                    searchResults = searchByTraitMulti(people);
+                    searchResults = searchByMultiTrait(people);
                     break;
                 default:
                     app(people);
@@ -328,6 +328,44 @@ function findPersonParents(person, people) {
     return result;
 }
 // End of findPersonParents()
+
+/**
+ * This function is used to determine who our Most Wanted person is, defined by trait:value from user input
+ * @param {Array} people        Passes in array of people objects
+ * @returns {Array}             Returns filtered object response
+ */
+function searchByMultiTrait(people) {
+    let result = searchByMultiUserInput(people);
+    let displayList = [""];
+    while (result.length > (1)) {
+        for (let i = 0; i < result.length; i++) {
+            displayList = result.map(function(person){
+                return `Subject ${person.firstName} ${person.lastName}\n`
+            })
+        }
+        alert(`Based on your query, we have found:\n${displayList}`);
+        result = searchByMultiUserInput(result);
+    }
+    return result;
+}
+// End of searchByMultiTrait()
+
+/**
+ * This function is used to determine if a trait:value matches any of the data entries in our dataset
+ * @param {Array} people        Passes in array of people objects
+ * @returns {Array}             Returns the array of objects containing the user defined trait:value
+ */
+function searchByMultiUserInput(people) {
+    let userInputParams = prompt('Enter trait and value separated by a colon\nExample - firstName:Billy\nEntries are case sensitive! Trait options are: id, firstName, lastName, gender, dob, height, weight, eyeColor, occupation\nWhen entering dob(Date of Birth) please use format MM/DD/YYY');
+    let filterParams = userInputParams.split(":");
+    let results = people.filter(function(person){
+        if (person[filterParams[0]] === filterParams[1] || +filterParams[1] === person[filterParams[0]]) {
+        return true;
+        }
+    })
+    return results;
+}
+// End of searchByMultiUserInput()
 
 /**
  * This function is used to determine who our Most Wanted person is, defined by its traits
