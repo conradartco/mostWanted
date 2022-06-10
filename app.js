@@ -31,12 +31,12 @@ function app(people) {
         case "no":
             //! TODO #4: Declare a searchByTraits (multiple traits) function //////////////////////////////////////////
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
-            let searchTraits = promptFor("Would you like to search using a singular trait or multiple traits?\nPlease enter: single or multiple\n", chars).toLowerCase();
+            let searchTraits = promptFor("Would you like to search using a singular trait or multiple traits?\nPlease enter: single or multi\n", chars).toLowerCase();
             switch (searchTraits) {
                 case "single":
                    searchResults = searchByTrait(people);
                    break;
-                case "multiple":
+                case "multi":
                     searchResults = searchByTraitMulti(people);
                     break;
                 default:
@@ -205,13 +205,25 @@ function chars(input) {
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
 
+/**
+ * This function takes the person object and finds any associated children
+ * @param {Object[]} person     The identified person object
+ * @param {Array} people        The dataset
+ * @returns {Array}             The returned array contains any descendants of the person object
+ */
 function findPersonDescendants(person, people) {
     let personSelect = person;
     let personChildren = findPersonChildren(personSelect, people);
-    let result = personChildren.split(',')
-    return result;
+    return personChildren;
 }
+// End of findPersonDescendants()
 
+/**
+ * This function takes the person object and collects all family associated data
+ * @param {Object[]} person     The identified person object
+ * @param {Array} people        The dataset
+ * @returns {Array}             The returned array is the final pass before alerting the user
+ */
 function findPersonFamily(person, people) {
     let personSelect = person;
     let personSpouse = findPersonSpouse(personSelect, people);
@@ -220,17 +232,26 @@ function findPersonFamily(person, people) {
     let familyArray = concatFamilyTies(personSpouse, personParents, personSiblings);
     return familyArray;
 }
+// End of findPersonFamily()
 
+/**
+ * This function takes in multiple pre-formatted arrays and joins them into one larger array
+ * @param {Array} spouse        The identified spouse relations (if any)
+ * @param {Array} parents       The identified parent relations (if any)
+ * @param {Array} siblings      The identified sibling relations (if any)
+ * @returns {Array}             The returned array is the combined value of the above params
+ */
 function concatFamilyTies(spouse, parents, siblings) {
     let spouseFamilyArray = spouse.concat(parents, siblings);
     return spouseFamilyArray;
 }
+// End of concatFamilyTies()
 
 /**
- * This function finds the identified person's spouse, and returns their information
- * @param {Array} person 
- * @param {Array} people 
- * @returns {Array}
+ * This function takes the person object and finds the associated spouse (if any)
+ * @param {Array} person        The identified person object
+ * @param {Array} people        The dataset
+ * @returns {Array}             The returned array is formatted as Relation: Subject
  */
 function findPersonSpouse(person, people) {
     let personSelect = person;
@@ -246,10 +267,16 @@ function findPersonSpouse(person, people) {
 }
 // End of findPersonSpouse()
 
+/**
+ * This function takes the person object and finds any associated siblings
+ * @param {Object[]} person     The identified person object
+ * @param {Array} people        The dataset
+ * @returns {Array}             The returned array is formatted as Relation: Subject
+ */
 function findPersonSiblings(person, people) {
     let personSelect = person;
     let personSiblings = people.filter(function(person){
-        if(personSelect.parents[0] === person.parents[0] && personSelect.id != person.id) {
+        if(personSelect.parents[0] === person.parents[0] && personSelect.id != person.id && person.parents != (0)) {
             return true;
         }
     })
@@ -258,7 +285,14 @@ function findPersonSiblings(person, people) {
     })
     return result;
 }
+// End of findPersonSiblings()
 
+/**
+ * This function takes the person object and finds any associated children
+ * @param {Object[]} person     The identified person object
+ * @param {Array} people        The dataset
+ * @returns {Array}             The returned array is formatted as Relation: Subject
+ */
 function findPersonChildren(person, people) {
     let personSelect = person;
     let personChildren = people.filter(function(person){
@@ -271,10 +305,11 @@ function findPersonChildren(person, people) {
     })
     return result;
 }
+// End of findPersonChildren()
 
 /**
  * This function finds the identified person's parents, and returns their information
- * @param {Array} person 
+ * @param {Object[]} person 
  * @param {Array} people 
  * @returns {Array}
  */
@@ -292,6 +327,7 @@ function findPersonParents(person, people) {
     })
     return result;
 }
+// End of findPersonParents()
 
 /**
  * This function is used to determine who our Most Wanted person is, defined by its traits
@@ -300,7 +336,14 @@ function findPersonParents(person, people) {
  */
 function searchByTrait(people) {
     let result = searchByUserInput(people);
+    let displayList = [""];
     while (result.length > (1)) {
+        for(let i = 0; i < result.length; i++) {
+            displayList = result.map(function(person){
+                return `Subject: ${person.firstName} ${person.lastName}\n`
+            })
+        }
+        alert(`Based on your query, we have found:\n${displayList}\nYou will be reprompted to find the desired subject.`);
         result = searchByUserInput(result);
     }
     return result;
