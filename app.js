@@ -31,7 +31,7 @@ function app(people) {
         case "no":
             //! TODO #4: Declare a searchByTraits (multiple traits) function //////////////////////////////////////////
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
-            let searchTraits = promptFor("Would you like to search using a singular trait or multiple traits?\nPlease enter: single or multi\n", chars).toLowerCase();
+            let searchTraits = promptFor("Would you like to search using a singular trait or multiple traits?\nPlease enter: single or multi\n", chars);
             switch (searchTraits) {
                 case "single":
                    searchResults = searchByTrait(people);
@@ -101,7 +101,8 @@ function mainMenu(person, people) {
             return;
         case "test":
             // Test functions here
-            findChildrenRecursive(person[0], people);
+            let test = findChildrenRecursive(person[0], people);
+            alert(test);
             break;
         default:
             // Prompt user again. Another instance of recursion
@@ -351,23 +352,22 @@ function concatDescendantTies(children, grandchildren) {
  * @param {Array} array             A default array
  * @returns {Array}                 Returns an array with any descendants of the identified person
  */
-function findChildrenRecursive(person, people, array = []) {
+function findChildrenRecursive(person, people, finalArray = []) {
     // Base Case (Terminating Condintion)
-    let personSelect = person;
-    // array = people;
+    let personSelect = person.id;
     let subArray = people.filter(function(person){
-        if(personSelect.id === person.parents[0] || personSelect.id === person.parents[1] && person.parents != (0)) {
+        if(personSelect.id === person.parents[0] || personSelect.id === person.parents[1]) {
             return true;
         }
     })
     if(subArray.length === 0) {
-        return subArray;
+        return null;
     }
     // Recursive Case
-    for(let i = 0; i < subArray.length; i++){
-        subArray = subArray.push(findChildrenRecursive(subArray[i], people))
+    for(let x in subArray){
+        subArray = subArray.push(findChildrenRecursive(subArray[x], people))
     }
-    alert(array);
+    return finalArray;
 }
 // End of findChildrenRecursive()
 
@@ -420,7 +420,7 @@ function searchByMultiTrait(people) {
  * @returns {Array}             Returns the array of objects containing the user defined trait:value
  */
 function searchByMultiUserInput(people) {
-    let userInputParams = prompt('Enter trait and value separated by a colon\nExample - firstName:Billy\nEntries are case sensitive! Trait options are: id, firstName, lastName, gender, dob, height, weight, eyeColor, occupation\nWhen entering dob(Date of Birth) please use format MM/DD/YYY');
+    let userInputParams = promptFor('Enter trait and value separated by a colon\nExample - firstName:Billy\nEntries are case sensitive! Trait options are: id, firstName, lastName, gender, dob, height, weight, eyeColor, occupation\nWhen entering dob(Date of Birth) please use format MM/DD/YYY', chars);
     let filterParams = userInputParams.split(":");
     let results = people.filter(function(person){
         if (person[filterParams[0]] === filterParams[1] || +filterParams[1] === person[filterParams[0]]) {
@@ -458,8 +458,8 @@ function searchByTrait(people) {
  * @returns {Array}             Returns the array of objects containing the user defined trait
  */
 function searchByUserInput(people) {
-    let userInputProp = prompt("Please enter the trait you would like to search by:\nid\nfirstName\nlastName\ngender\ndob\nheight\nweight\neyeColor\noccupation\n");
-    let userInputVal = prompt("Please enter the value you'd like to search for.")
+    let userInputProp = promptFor("Please enter the trait you would like to search by:\nid\nfirstName\nlastName\ngender\ndob\nheight\nweight\neyeColor\noccupation\n", chars);
+    let userInputVal = promptFor("Please enter the value you'd like to search for.", chars)
     let results = people.filter(function (person){
             if (person[userInputProp] === userInputVal || +userInputVal === person[userInputProp]){
                 return true;
@@ -469,3 +469,7 @@ function searchByUserInput(people) {
     return results;
 }
 // End of searchByUserInput()
+
+function confirmInput(params) {
+    
+}
